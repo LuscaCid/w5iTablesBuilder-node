@@ -1,0 +1,1 @@
+export type VariableTypes =  "boolean" | "varchar" | "text" | "int" | "float" | "double"| "char";
