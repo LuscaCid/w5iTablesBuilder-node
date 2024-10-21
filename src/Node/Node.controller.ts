@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestj
 import { NodeService } from "./Node.service";
 import { Node } from "Schemas/Node";
 import { PositionUpdateArgs } from "Schemas/Position";
-import { TabelaParams } from "./Interfaces/HttpArgs";
+import { GetNodesDTO } from "./DTO/HttpArgs";
 
 @Controller("node")
 export class NodeController  
@@ -11,8 +11,6 @@ export class NodeController
         private readonly nodeService : NodeService
     ) 
     {}
-
-      
       /**
        * @summary Rota de patch par atualizacao simples dentro da tabela de acordo com o nome da tabela e classe modelo
        * @author Lucas Cid <lucasfelipaaa@gmail.com>
@@ -29,7 +27,7 @@ export class NodeController
         }
       }
       @Get("getMany")
-      async getBankModuleNodes(@Query() args: TabelaParams.GetTableNodeArgs)
+      async getBankModuleNodes(@Query() args: GetNodesDTO)
       {   
         const tabelas = await this.nodeService.getMany(args.id_banco, args.id_modulodiagrama);
        

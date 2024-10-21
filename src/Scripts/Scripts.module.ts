@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
+import { ScriptController } from "./Scripts.controller";
 
 @Module({
     imports : [],
-    exports : []
+    exports : [],
+    controllers : [ScriptController]
 })
 export class ScriptsModule {}

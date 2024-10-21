@@ -4,7 +4,6 @@ import { Injectable } from "@nestjs/common";
 import { Node } from "Schemas/Node";
 import { Model } from "mongoose";
 import { PositionUpdateArgs } from "Schemas/Position";
-
 @Injectable()
 export class NodeService
 {
@@ -13,7 +12,6 @@ export class NodeService
         private readonly nodeRepo : Model<Node>
     )
     {}
-
     async updateNodePosition(args: PositionUpdateArgs): Promise<Node | null> 
     {
         return await this.nodeRepo.findOneAndUpdate(
@@ -24,7 +22,6 @@ export class NodeService
                     y : args.yPos
                 }
             },
-       
         ); 
     }
     async updateNameAndClass (table : Node) 

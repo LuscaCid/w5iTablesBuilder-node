@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ServerConfig } from '../Config/ServerConfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NodeModule } from './Node/Node.module';
+import { ColumnNodeModule } from './ColumnNode/ColumnNode.module';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { NodeModule } from './Node/Node.module';
     //conexao para obtencao da conexao e injecao de conexao
     TypeOrmModule.forRoot(ServerConfig.getTypeOrmConfig()),
     NodeModule,
-    
+    ColumnNodeModule
   ],
 })
 export class AppModule implements NestModule 

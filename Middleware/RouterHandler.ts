@@ -9,6 +9,11 @@ declare module 'express' {
     user : Partial<W5iUser>
   }
 }
+/**
+ * @Summary Classe Que Vai funcionar como um intermediador de requisicoes com base no metodo de autenticacao com a conta do google ou provedor padrao de emaqil e senha 
+ * @author Lucas Cid <lucasfelipaaa@gmail.com>
+ * @created 21/10/2024
+ */
 export class AuthMiddleware implements NestMiddleware 
 {
   static readonly admin = admin.initializeApp({

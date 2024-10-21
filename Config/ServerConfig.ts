@@ -1,5 +1,6 @@
 import { MongooseModuleOptions } from "@nestjs/mongoose";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import "dotenv/config"
 export class ServerConfig
 {
     public static getEnv (key : string, throwOnMissing = false) {

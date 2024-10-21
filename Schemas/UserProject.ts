@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { UsuarioProjetos } from '@Types/Projeto';
 import { Document, HydratedDocument } from 'mongoose';
 
 export type UsuarioProjetosDocument = HydratedDocument<UsuarioProjetos>;
 
-@Schema()
-export class UsuarioProjetos extends Document
+@Schema({collection : "usuario_projeto"})
+export class UsuarioProjeto extends Document
 {
   @Prop()
   id_projeto: string;
@@ -16,5 +17,5 @@ export class UsuarioProjetos extends Document
   nu_cargo: string;
 }
 
-export const UsuarioProjetoSchema = SchemaFactory.createForClass(UsuarioProjetos);
+export const UsuarioProjetoSchema = SchemaFactory.createForClass(UsuarioProjeto);
 UsuarioProjetoSchema.set('collection', "usuario_projeto");

@@ -23,6 +23,5 @@ export class Projeto extends Document
 }
 
 export const ProjetoSchema = SchemaFactory.createForClass(Projeto);
-
 // Adicionando o índice
 ProjetoSchema.index({ usuario: 1 });

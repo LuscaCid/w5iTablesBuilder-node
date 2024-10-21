@@ -17,6 +17,6 @@ export class NotificationService
         const response = await this.notificationRepository.find({})
         return response;
     }
-
+    
     
 }
