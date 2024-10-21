@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 
-@Schema({collection : 'notification', timestamps : true})
+@Schema({collection : 'notificacao', timestamps : true})
 export class Notification extends Document
 {
     @Prop({type : String})

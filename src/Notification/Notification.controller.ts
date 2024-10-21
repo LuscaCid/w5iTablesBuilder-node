@@ -14,11 +14,10 @@ export class NotificationController
         const response = await this.notificationService.getUserNotifications(uid);
         return response
     }
-
     
     // @Post("invite-user")
     // public async inviteUserToAProject (@Query() q : { }) 
     // {
     //     const response = await this.notificationService.sendInviteToBePartnerOfAProject();
     // }
-}
+} 

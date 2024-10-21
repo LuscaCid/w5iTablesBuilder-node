@@ -31,8 +31,7 @@ import { Notification, NotificationSchema } from "Schemas/Notification";
         DatabaseService, 
         ProjetoService,
         ModuloDiagramaService
-    ],
-
+    ]
 })
 export class DatabaseModule 
 {}
