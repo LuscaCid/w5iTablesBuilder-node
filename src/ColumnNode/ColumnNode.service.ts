@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { TableNode } from "@Types/Node";
 import { ServerConfig } from "Config/ServerConfig";
 import { Model } from "mongoose";
 import { Coluna } from "Schemas/Coluna";
+import { Node } from "Schemas/Node";
 
 @Injectable()
 export class ColumnNodeService  
@@ -13,7 +13,13 @@ export class ColumnNodeService
         private readonly columnRepo : Model<Coluna>
     )
     {}
-    async addColumn(_id : string,  column: Coluna): Promise<TableNode|null> 
+    /**
+     * @summary A funcao vai salvar a coluna no banco de dados mongodb, a ideia eh se caso ela ja nao existir, apenas criar um novo documento
+     * @param _id 
+     * @param column 
+     * @returns 
+     */
+    async addColumn(_id : string,  column: Coluna): Promise<Node|null> 
     {
         return await this.columnRepo.findOneAndUpdate(
             { _id }, 
@@ -21,7 +27,7 @@ export class ColumnNodeService
             { new : true }
         );
     }
-    async deleteColumn(_id: string, id_colunacanvas: string): Promise<TableNode | null> 
+    async deleteColumn(_id: string, id_colunacanvas: string): Promise<Node | null> 
     {
         //busca a tabela pelo _id e em seguida deleta a coluna pelo proprio id
         return await this.columnRepo.findOneAndUpdate(
@@ -34,7 +40,7 @@ export class ColumnNodeService
             { new : true }
         );
     }
-    async updateColumn(_id: string, column: Coluna): Promise<TableNode | null> {
+    async updateColumn(_id: string, column: Coluna): Promise<Node | null> {
         return await this.columnRepo.findOneAndUpdate(
             { _id, 'data.colunas._id' : column._id },
             { $set : {
