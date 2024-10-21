@@ -109,6 +109,11 @@ export class ProjetoController
         };
     }
 
+    /**
+     * @summary Funcao que vai convidar usuarios em cascata com base num array de usuarios enviado como parametro pela rquisicao, pelo corpo da requisicao.
+     * @author Lucas Cid <lucasfelipaaa@gmail.com>
+     * @created 21/10/2024
+     */
     @Post("invite-users") 
     @ApiCreatedResponse({description : "Usuarios convidados com sucesso"})
     async inviteUsersToProject(@Body() users : UserInviteProjetos[]) 
@@ -119,6 +124,8 @@ export class ProjetoController
             status : 200
         };
     } 
+    // WIP: WORK IN PROGRESS, a tratativa do upload de imagens em andamento para ter uma esterutura compativel ao envio de imagens para enbelezamento de projeto,
+
     //criar interceptador para obtencao dos files da requests...
     // @UseInterceptors(FileInterceptor('image'))
     // @ApiConsumes("multipart/form-data")

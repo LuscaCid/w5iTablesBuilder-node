@@ -5,7 +5,7 @@ import { Position, PositionSchema } from "./Position";
 
 export type NodeDocument = HydratedDocument<Node> 
 
-@Schema({ timestamps : true, collection : 'node'})
+@Schema({ timestamps : true })
 export class Node  extends Document
 {
     @Prop({type : String, required : true})
@@ -18,4 +18,3 @@ export class Node  extends Document
 }
   
 export const NodeSchema = SchemaFactory.createForClass(Node);
-NodeSchema.set('collection', "node")

@@ -13,16 +13,15 @@ import { ColumnNodeModule } from './ColumnNode/ColumnNode.module';
       ServerConfig.getMongoDbConfig()
     ), 
     //conexao para obtencao da conexao e injecao de conexao
-    TypeOrmModule.forRoot(ServerConfig.getTypeOrmConfig()),
     NodeModule,
     ColumnNodeModule
   ],
 })
-export class AppModule implements NestModule 
+export class AppModule
 {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-    .apply(AuthMiddleware)
-    .forRoutes("node", "banco", "script", "projeto")
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //   .apply(AuthMiddleware)
+  //   .forRoutes("node", "banco", "script", "projeto")
+  // }
 }

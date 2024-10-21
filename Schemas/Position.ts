@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
 export type PositionDocument = HydratedDocument<Position>;
 @Schema()
-export class Position extends Document
+export class Position
 {
   @Prop({ required: true })
   x: number;

@@ -1,14 +1,14 @@
+import { UserInvite } from "Schemas/NotificationTypesSchemas/UserInviteToProject";
+import { Projeto, ProjetoDocument } from "Schemas/Project";
+import { GetUserProjectsDTO } from "./DTO/GetUserProjects";
+import { UserInviteProjetos } from "@Types/UserInvites";
+import { UsuarioProjeto } from "Schemas/UserProject";
+import { Notification } from "Schemas/Notification";
 import { ServerConfig } from "Config/ServerConfig";
+import { UsuarioProjetos } from "@Types/Projeto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
-import { Projeto, ProjetoDocument } from "Schemas/Project";
-import { UsuarioProjeto } from "Schemas/UserProject";
-import { UsuarioProjetos } from "@Types/Projeto";
-import { GetUserProjectsDTO } from "./DTO/GetUserProjects";
-import { UserInviteProjetos } from "@Types/UserInvites";
-import { Notification } from "Schemas/Notification";
-import { UserInvite } from "Schemas/NotificationTypesSchemas/UserInviteToProject";
 
 @Injectable()
 export class ProjetoService
@@ -112,19 +112,19 @@ export class ProjetoService
     }
     /**
      * @summary Convida os usuarios para o projeto, porem se o convite ja foi enviado anteriormente, para nao sobrecarregar o banco, o convite nao é enviado.
-     * @param invites 
-     * @returns 
+     * @author Lucas Cid <lucasfelipaaa@gmail.com>
+     * @created 21/10/2024
      */
     async inviteFriends( invites : UserInviteProjetos[]) 
     {
         const invitesForInsert = await Promise.all(
-          invites.map(async (invite) => {
-            const inviteAlreadyInserted = await this.userInviteRepo.findOne({
-              id_projeto: invite.id_projeto,
-              id_usuarioconvidador: invite.id_usuarioconvidador,
-              id_usuarioconvidado: invite.id_usuarioconvidado,
-            });
-      
+            invites.map(async (invite) => {
+                const inviteAlreadyInserted = await this.userInviteRepo.findOne({
+                id_projeto: invite.id_projeto,
+                id_usuarioconvidador: invite.id_usuarioconvidador,
+                id_usuarioconvidado: invite.id_usuarioconvidado,
+                });
+                
             return inviteAlreadyInserted ? null : invite;
           })
         );
@@ -145,8 +145,7 @@ export class ProjetoService
     async acceptInvite(id_invite : string)
     {   
         //para aceitar um convite eh necessario que o convite tenha o status atualizado ou apagado, e um documento novo na colecao de usuario_projeto adicionado com a informacao de aceitacao para adentrar o projeto como um novo participante
-        const inviteDeleted = await this.userInviteRepo.findOneAndDelete({_id : id_invite});
-        return inviteDeleted;
+        return await this.userInviteRepo.findOneAndDelete({_id : id_invite});
     };
     async rejectInvite(id_invite : string) 
     {
@@ -157,22 +156,17 @@ export class ProjetoService
     {
         return await this.projectRepo.findOneAndReplace({_id : projeto._id},projeto);
     }
-    
     async getUserAlreadyInProject (id_usuario : string, id_projeto : string) : Promise<UsuarioProjeto | null> 
     {
         const userInProject = await this.userProjectRepo.findOne({id_usuario, id_projeto});
         return userInProject;
     }
-
    async updateUserRole(usuarioProjeto: UsuarioProjeto): Promise<UsuarioProjeto | null> 
-   {
+    {
         return await this.userProjectRepo.findOneAndReplace({id : usuarioProjeto.id}, usuarioProjeto);
-   }
-
-
+    }
     async getUserInvites (uid : string)
     {
-        return await this.
+        return await this.userInviteRepo.find({id_usuarioconvidado : uid});
     }
-
 }

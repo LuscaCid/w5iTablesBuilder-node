@@ -16,9 +16,9 @@ export class NotificationController
     }
 
     
-    @Post("invite-user")
-    public async inviteUserToAProject (@Query() q : { }) 
-    {
-        const response = await this.notificationService.sendInviteToBePartnerOfAProject();
-    }
+    // @Post("invite-user")
+    // public async inviteUserToAProject (@Query() q : { }) 
+    // {
+    //     const response = await this.notificationService.sendInviteToBePartnerOfAProject();
+    // }
 }

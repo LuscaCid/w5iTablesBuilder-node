@@ -29,6 +29,7 @@ export class NodeController
       @Get("getMany")
       async getBankModuleNodes(@Query() args: GetNodesDTO)
       {   
+        console.log(args);
         const tabelas = await this.nodeService.getMany(args.id_banco, args.id_modulodiagrama);
        
         return {

@@ -3,7 +3,7 @@ import { Document, HydratedDocument } from 'mongoose';
 
 export type ColunaDocument = HydratedDocument<Coluna>;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, autoCreate : false})
 export class Coluna extends Document 
 {
   @Prop({ required: true })

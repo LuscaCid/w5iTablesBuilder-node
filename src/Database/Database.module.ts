@@ -3,6 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Banco, BancoSchema } from "Schemas/Database";
 import { DatabaseController } from "./Database.controller";
 import { DatabaseService } from "./Database.service";
+import { ServerConfig } from "Config/ServerConfig";
 
 /**
  * @summary Este modulo nao eh de configuracao do banco de dados o qual a aplicacao realizara conexao para obtencao ou insercao de informacoes. Se trata dos bancos que serao inseridos na aplicacao dentro dos projetos os quais serao inseridos os sqls para gerenciamento do banco de dados
@@ -12,7 +13,7 @@ import { DatabaseService } from "./Database.service";
     imports : [
         MongooseModule.forFeature([
             { name : Banco.name, schema : BancoSchema }
-        ])
+        ], ServerConfig.getEnv("CONNECTION_NAME")) 
     ],
     controllers : [DatabaseController],
     providers : [DatabaseService]
