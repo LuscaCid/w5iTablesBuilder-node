@@ -15,9 +15,10 @@ export class NotificationController
         return response
     }
 
+    
     @Post("invite-user")
     public async inviteUserToAProject (@Query() q : { }) 
     {
-        const response = await this.notificationService.sendInviteToAProject();
+        const response = await this.notificationService.sendInviteToBePartnerOfAProject();
     }
 }

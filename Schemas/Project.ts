@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
+import { timestamp } from 'rxjs';
 
 export type ProjetoDocument = HydratedDocument<Projeto>;
 
@@ -20,6 +21,12 @@ export class Projeto extends Document
 
   @Prop()
   id_usuariocriador: string;
+  
+  @Prop({options  : { timestamp : true }})
+  createdAt : string;
+  
+  @Prop({options : { timestamp : true}})
+  updatedAt : string;
 }
 
 export const ProjetoSchema = SchemaFactory.createForClass(Projeto);

@@ -3,8 +3,9 @@ import { Document } from "mongoose";
 /**
  * @summary Se trata de uma forma de gerar notificacoes sobre acoes de forma dinamica sem necessariamente criar uma colecao para cada uma. Logo, esta eh uma interface mais dinamica para ser usada em outras mais especificas
  */
-export interface GenericInvite extends Document
+export interface GenericInvite
 {
+    _id? : string
     action_type  : NotificationActions
     id_usuarioconvidador : string;
     nm_usuarioenviador : string;
@@ -30,3 +31,5 @@ export type NotificationActions =
 "drop-database" | 
 "alter-table" | 
 "remove-module-accept";
+
+export type NotificationStatus = "accepted" | "rejected" | "pending"

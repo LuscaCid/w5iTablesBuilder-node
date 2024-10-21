@@ -13,4 +13,6 @@ export interface Coluna
     nm_colunacanvas: string
     nu_tamanho: string
     referencia? : Referencia
+    createdAt? : string
+    updatedAt? : string
 }

@@ -3,10 +3,12 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Projeto, ProjetoDocument } from "Schemas/Project";
-import { UsuarioProjeto, UsuarioProjetoSchema } from "Schemas/UserProject";
-import { serverTimestamp } from "firebase/firestore";
+import { UsuarioProjeto } from "Schemas/UserProject";
 import { UsuarioProjetos } from "@Types/Projeto";
 import { GetUserProjectsDTO } from "./DTO/GetUserProjects";
+import { UserInviteProjetos } from "@Types/UserInvites";
+import { Notification } from "Schemas/Notification";
+import { UserInvite } from "Schemas/NotificationTypesSchemas/UserInviteToProject";
 
 @Injectable()
 export class ProjetoService
@@ -16,7 +18,10 @@ export class ProjetoService
         private readonly projectRepo : Model<Projeto>,
         
         @InjectModel(UsuarioProjeto.name, ServerConfig.getMongoDbName())
-        private readonly userProjectRepo : Model<UsuarioProjeto>
+        private readonly userProjectRepo : Model<UsuarioProjeto>,
+
+        @InjectModel(Notification.name, ServerConfig.getMongoDbName())
+        private readonly userInviteRepo : Model<UserInvite>
     )
     {}
     async getUserProjectsAndUsersInsideThisProjects(uid: string): Promise<ProjetoDocument[] | null> 
@@ -35,11 +40,15 @@ export class ProjetoService
             }
         ])    
     }
+    async addProjeto (project : Projeto) 
+    {
+        return await this.projectRepo.create(project)[0];
+    }
     async getProjectById(id_projeto : string): Promise<Projeto|null> 
     {
         return await this.projectRepo.findById(id_projeto);
     }
-    async atualizarProjeto(projeto: Projeto): Promise<Projeto | null> 
+    async replaceProject(projeto: Projeto): Promise<Projeto | null> 
     {
         return await this.projectRepo.findOneAndReplace({_id : projeto._id}, projeto);
     }
@@ -54,16 +63,22 @@ export class ProjetoService
         await this.projectRepo.deleteMany({id_projeto : projectDeleted?.id});
         return projectDeleted
     }
-    async getNotifications(id_usuario: string): Promise<IProjetoCommunity.UserInviteProjetos | null> 
+    async getNotifications(id_usuario: string) 
     {
-        return await UsuarioConviteModel.find({id_usuarioconvidado : id_usuario}) as unknown as IProjetoCommunity.UserInviteProjetos;
+        // retorno das notificacoes do usuario encontrada pelo id do usuario passado como argumento para a funcao
+        return await this.userInviteRepo.find({id_usuarioconvidado : id_usuario});
     }
+    /***
+     * @Summary Vai adicionar o usuario no projeto a partir de uma coleao terceira que faz somente este link
+     * @author Lucas Cid 
+     * @created 21/10/2024
+     */
     async addUserToProject(args : UsuarioProjetos) 
     {
         //insere um usuario dentro de um projeto com um cargo e todas as demais informacoes necessarias
         return await this.userProjectRepo.create(args);
     }
-    async getUserProjects(args: GetUserProjectsDTO): Promise<Projeto[] | []> 
+    async getUserProjects(args: GetUserProjectsDTO) 
     {
         const userProjects = await this.userProjectRepo.find({id_usuario : args.id_usuario});
         if (userProjects.length > 0) 
@@ -81,7 +96,7 @@ export class ProjetoService
                             nm_arquivoicone : projeto!.nm_arquivoicone,
                             nu_cargo : userProject.nu_cargo,
                             createdAt : projeto?.createdAt,
-                            updatedAt : projeto?.updatedAt,
+                            updatedAt : projeto?.updatedAt
                         } 
                     }
                 )
@@ -92,19 +107,19 @@ export class ProjetoService
     }
     async getUsuarioProjetoRole(id_usuario : string, id_projeto : string) 
     {
-        return await this.UsuarioprojectRepo.findOne({id_usuario, id_projeto});
+        //retornar os projetos a partir da colecao userprojects para que o usuario possa carregar o cargo juntamente com as informacoes pertinentes ao projeto o qual faz parte
+        return await this.userProjectRepo.findOne({id_usuario, id_projeto});
     }
     /**
      * @summary Convida os usuarios para o projeto, porem se o convite ja foi enviado anteriormente, para nao sobrecarregar o banco, o convite nao é enviado.
      * @param invites 
      * @returns 
      */
-    async inviteFriends(
-        invites: IProjetoCommunity.UserInviteProjetos[]
-      ): Promise<IProjetoCommunity.UserInviteProjetos[]> {
+    async inviteFriends( invites : UserInviteProjetos[]) 
+    {
         const invitesForInsert = await Promise.all(
           invites.map(async (invite) => {
-            const inviteAlreadyInserted = await UsuarioConviteModel.findOne({
+            const inviteAlreadyInserted = await this.userInviteRepo.findOne({
               id_projeto: invite.id_projeto,
               id_usuarioconvidador: invite.id_usuarioconvidador,
               id_usuarioconvidado: invite.id_usuarioconvidado,
@@ -118,7 +133,7 @@ export class ProjetoService
       
         console.log(filteredInvites);
         if (filteredInvites.length > 0) {
-          return await UsuarioConviteModel.insertMany(filteredInvites);
+          return await this.userInviteRepo.insertMany(filteredInvites);
         }
         return [];
       }
@@ -129,17 +144,18 @@ export class ProjetoService
      */
     async acceptInvite(id_invite : string)
     {   
-        const inviteDeleted = await UsuarioConviteModel.findOneAndDelete({_id : id_invite});
+        //para aceitar um convite eh necessario que o convite tenha o status atualizado ou apagado, e um documento novo na colecao de usuario_projeto adicionado com a informacao de aceitacao para adentrar o projeto como um novo participante
+        const inviteDeleted = await this.userInviteRepo.findOneAndDelete({_id : id_invite});
         return inviteDeleted;
     };
     async rejectInvite(id_invite : string) 
     {
-        const inviteDeleted = await UsuarioConviteModel.findOneAndDelete({_id : id_invite});
+        const inviteDeleted = await this.userInviteRepo.findOneAndDelete({_id : id_invite});
         return inviteDeleted;
     }
-    async addProjeto(projeto : Projeto) : Promise<Projeto>
+    async updateProject(projeto : Projeto) : Promise<Projeto>
     {
-        return await this.projectRepo.create(projeto);
+        return await this.projectRepo.findOneAndReplace({_id : projeto._id},projeto);
     }
     
     async getUserAlreadyInProject (id_usuario : string, id_projeto : string) : Promise<UsuarioProjeto | null> 
@@ -152,5 +168,11 @@ export class ProjetoService
    {
         return await this.userProjectRepo.findOneAndReplace({id : usuarioProjeto.id}, usuarioProjeto);
    }
+
+
+    async getUserInvites (uid : string)
+    {
+        return await this.
+    }
 
 }

@@ -10,10 +10,10 @@ export const cargos = {
     "2" : "admin",  //tem como criar banco de dados no projeto
     "3" : "editor"  //apenas cria tabelas
 }
-
+export type KeyCargos = keyof typeof cargos; 
 interface Projeto extends Document
 {
-    id_projeto? : string
+    _id? : string
     id_usuariocriador: string;
     nm_projeto : string;
     nm_usuariocriador : string;
