@@ -1,10 +1,21 @@
 # Projeto W5i Tables Builder
 
-# Introdução Esta aplicação tem como objetivo ser um gerenciador de banco de dados voltado para o Adiant Framework, proporcionando uma maneira dinâmica e intuitiva de gerenciar e visualizar tabelas e suas relações. Utilizando o HTML5 Canvas, a interface permite a criação e manipulação de tabelas dinâmicas diretamente na tela, tornando a interação com o banco de dados mais visual e acessível.
+# Gerenciador de Banco de Dados para Adianti Framework
 
-## O sistema oferece uma experiência fluida, onde os usuários podem desenhar, modificar e interconectar tabelas facilmente, sem a necessidade de interações complexas ou comandos manuais. Com isso, o objetivo é facilitar a administração de bases de dados no Adianti Framework, tornando as operações de gerenciamento mais eficazes e visualmente compreensíveis.
+Este projeto é um gerenciador de banco de dados criado para facilitar a administração de bancos de dados no **Adianti Framework**. A aplicação utiliza **HTML5 Canvas** para fornecer uma interface **dinâmica** e **intuitiva**, onde é possível visualizar e manipular tabelas e suas relações de forma visual e acessível.
 
-### Esta introdução reflete o propósito da aplicação, destacando suas funcionalidades principais de forma clara e acessível.
+## Funcionalidades
+
+- Interface gráfica para gerenciar tabelas de banco de dados.
+- Manipulação visual das relações entre tabelas.
+- Gerenciamento dinâmico e simplificado utilizando **HTML5 Canvas**.
+- Integração com bancos de dados PostgreSQL e MongoDB.
+
+## Pré-requisitos
+
+- **Node.js** (>= 17.x)
+- **NestJS** (framework utilizado no projeto)
+- **Docker** (opcional, se preferir rodar com container)
 
 ### Este é um projeto desenvolvido utilizando o framework NestJS.
 
@@ -20,7 +31,53 @@ Você precisará de um arquivo `firebase.json` contendo o secret do Firebase Adm
 
 Você também precisará configurar variáveis de ambiente no arquivo `.env`. Aqui estão as variáveis necessárias para a configuração do PostgreSQL, MongoDB e outras configurações importantes:
 
+- `TYPE`: O tipo do banco de dados (por exemplo, `postgres`).
+- `HOST`: O host do banco de dados.
+- `PORT`: A porta de conexão (padrão `5432`).
+- `USER`: O usuário do banco de dados.
+- `PASSWORD`: A senha do banco de dados.
+- `DATABASE`: O nome da base de dados.
+
+#### MongoDB
+
+- `CONNECTION_STRING`: A URL de conexão com o MongoDB.
+- `MAIN_DATABASE`: O nome do banco de dados principal.
+- `CONNECTION_NAME`: O nome da conexão MongoDB.
+
+#### Outras Configurações
+
+Configurações adicionais:
+
+
+- `DAYS`: Número de dias para retornar informações antigas.
+
+#### Configuração de CRON
+
+Para executar uma tarefa agendada todos os dias às 23 horas:
+
+Configure a string de conexão com o MongoDB:
+
+
 #### PostgreSQL
 
 Configure as informações de conexão com o PostgreSQL:
+
+## configuracoes para rodar o projeto numa maquina linux
+
+[Unit]
+Description=Portal API - NestJS Service
+After=network.target
+
+[Service]
+ExecStart=npm run start:prod caminho/para/pasta/projeto/src/main.js
+WorkingDirectory=<caminho/para/pasta/do/projeto>
+Restart=always
+User=root
+Group=root
+WorkingDirectory=/home/app/portal-api
+Environment=DATABASE_URL=mongodb://localhost:porta/w5i-tablesbuilder
+
+[Install]
+WantedBy=multi-user.target
+
 
