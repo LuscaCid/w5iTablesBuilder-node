@@ -163,7 +163,7 @@ export class ProjetoService
     }
    async updateUserRole(usuarioProjeto: UsuarioProjeto): Promise<UsuarioProjeto | null> 
     {
-        return await this.userProjectRepo.findOneAndReplace({id : usuarioProjeto.id}, usuarioProjeto);
+        return await this.userProjectRepo.findOneAndReplace({id : usuarioProjeto._id}, usuarioProjeto);
     }
     async getUserInvites (uid : string)
     {

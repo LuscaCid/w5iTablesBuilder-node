@@ -12,7 +12,7 @@ import { ProjetoService } from "./Project.service";
         ], ServerConfig.getEnv("CONNECTION_NAME"))
     ],
     controllers : [ProjetoController],
-    providers : [ProjetoService]
+    providers : [ProjetoService],
 })
 export class ProjectModule 
 {}

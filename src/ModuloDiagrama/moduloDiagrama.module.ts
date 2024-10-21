@@ -12,6 +12,6 @@ import { ModuloDiagrama, ModuloDiagramaSchema } from "Schemas/ModuloDiagrama";
         ], ServerConfig.getEnv("CONNECTION_NAME"))
     ],
     providers : [ModuloDiagramaService],
-    controllers : [ModuloDiagramaController]
+    controllers : [ModuloDiagramaController],
 })
 export class ModuloDiagramaModule {}

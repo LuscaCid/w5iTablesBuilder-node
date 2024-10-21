@@ -5,6 +5,7 @@ import { ServerConfig } from '../Config/ServerConfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NodeModule } from './Node/Node.module';
 import { ColumnNodeModule } from './ColumnNode/ColumnNode.module';
+import { DatabaseModule } from './Database/Database.module';
 
 @Module({
   imports: [
@@ -14,14 +15,15 @@ import { ColumnNodeModule } from './ColumnNode/ColumnNode.module';
     ), 
     //conexao para obtencao da conexao e injecao de conexao
     NodeModule,
-    ColumnNodeModule
+    ColumnNodeModule,
+    DatabaseModule
   ],
 })
 export class AppModule
 {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer
-  //   .apply(AuthMiddleware)
-  //   .forRoutes("node", "banco", "script", "projeto")
-  // }
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+    .apply(AuthMiddleware)
+    .forRoutes("node", "banco", "script", "projeto")
+  }
 }
