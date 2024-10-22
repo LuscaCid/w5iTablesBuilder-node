@@ -3,7 +3,7 @@ import { Document, HydratedDocument } from 'mongoose';
 
 export type UserSettingsDocument = HydratedDocument<UserSettings>;
 
-@Schema()
+@Schema({collection: "usuario_config", timestamps : true})
 export class UserSettings extends Document
 {
   @Prop()

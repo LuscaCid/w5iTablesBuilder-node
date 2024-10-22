@@ -21,6 +21,8 @@ export class ColumnNodeService
      */
     async addColumn(_id : string,  column: Coluna): Promise<Node|null> 
     {
+        console.log(_id);
+        console.log(column);
         return await this.columnRepo.findOneAndUpdate(
             { _id }, 
             { $push : { 'data.colunas' : column}}, 

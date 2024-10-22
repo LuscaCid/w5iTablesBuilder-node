@@ -42,7 +42,7 @@ export class ProjetoService
     }
     async addProjeto (project : Projeto) 
     {
-        return await this.projectRepo.create(project)[0];
+        return await this.projectRepo.create(project);
     }
     async getProjectById(id_projeto : string): Promise<Projeto|null> 
     {
@@ -128,10 +128,8 @@ export class ProjetoService
             return inviteAlreadyInserted ? null : invite;
           })
         );
-        console.log(invitesForInsert);
         const filteredInvites = invitesForInsert.filter((invite) => invite !== null);
       
-        console.log(filteredInvites);
         if (filteredInvites.length > 0) {
           return await this.userInviteRepo.insertMany(filteredInvites);
         }

@@ -3,6 +3,7 @@ import { DatabaseService } from "./Database.service";
 import { ProjetoService } from "src/Projects/Project.service";
 import { ModuloDiagramaService } from "src/ModuloDiagrama/moduloDiagrama.service";
 import { Banco } from "Schemas/Database";
+import { ModuloDiagrama } from "Schemas/ModuloDiagrama";
 
 @Controller("banco")
 export class DatabaseController 
@@ -21,13 +22,14 @@ export class DatabaseController
    */
   @Get("get-project-banks/:id_projeto/:id_usuario")
   async getBancoByIdProjeto( 
-    @Param() id_projeto : string, 
-    @Param()id_usuario : string 
+    @Param() params : {id_projeto : string; id_usuario : string}, 
   )
   {
-    const bancos = await this.dbService.getBanksByProjectId(id_projeto);
+    const bancos = await this.dbService.getBanksByProjectId(params.id_projeto);
     //se caso tentar buscar um banco o qual nao faz parte
-    const userIsPartnerOfThisDatabase = await this.projectService.getUserProjects({id_usuario});
+    const userIsPartnerOfThisDatabase = await this.projectService.getUserProjects(
+      {id_usuario : params.id_usuario}
+    );
     return {
       bancosRole : userIsPartnerOfThisDatabase,
       bancos,
@@ -40,7 +42,7 @@ export class DatabaseController
    */
   @Post("addOne")
   async addBanco (
-      @Body() banco : Banco
+    @Body() banco : Banco
   ) 
   {
     const projectExists = await this.projectService.getProjectById(banco.id_projeto);
@@ -54,8 +56,8 @@ export class DatabaseController
     {
       await this.moduloDiagramaService.addOne({
         nm_modulodiagrama : "Principal",
-        id_banco : response._id,
-      });
+        id_banco : response._id.toString(),
+      } as ModuloDiagrama);
     }
     return {
       data : response,

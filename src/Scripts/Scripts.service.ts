@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ServerConfig } from "Config/ServerConfig";
 import { Model } from "mongoose";
@@ -23,7 +23,7 @@ export class ScriptService
     {}
     /**
      * @summary a partir das colunas retornadas, pode-se construir a estrutura das tabelas 
-     * @returns ]
+     * @returns 
      */
     async getDatabaseCols (database : Banco) 
     {
@@ -87,7 +87,7 @@ export class ScriptService
                     },
               
                     type : "table",
-                });
+                } as Node);
             };
         });
         return nodesFormatted;
@@ -96,14 +96,32 @@ export class ScriptService
     {
         return nodesArray.find((node) => node.data.nm_tabelacanvas === col.nm_tabelacanvas);
     }
-  
     /**
      * @summary funcao que é executada no frontend, nela vai acontecer toda a a logica de comparacao de tabelas do banco e as que estao no fronetnend
      * @author Lucas Cid <lucasfelipaaa@gmail.com>
      * @created 12/08/2024
      * @param sql : string
      */
-    async runSqlScript (sql : string) 
+    async runSqlScript (sql : string, databaseSettings : Banco) 
     {
+        const pool = DatabaseConnection.openConnection(databaseSettings);
+        const tablesFromSqlToCompare = sql.split("--")
+        try {
+            const responses = await Promise.all(
+                tablesFromSqlToCompare.map( async (table) => {
+                    //buscando a tabela pelo seu nome no atual banco de dados conectado
+                    const tableFromDatabase = await pool.query(table);
+
+                    //apos isto eh nessario realizar as comparacoes entre as colunas presentes no sql enviado como parametro e o objeto coluna retornado do banco
+                    return tableFromDatabase;
+                })
+            )
+
+            return responses;
+        } catch (err : unknown) 
+        {
+            Logger.error(err);
+            throw new InternalServerErrorException(err)
+        }
     }
 }

@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
-import { timestamp } from 'rxjs';
 
 export type ProjetoDocument = HydratedDocument<Projeto>;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection : "projeto" })
 export class Projeto extends Document
 {
   @Prop()

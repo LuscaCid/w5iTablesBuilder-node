@@ -37,16 +37,18 @@ export class DatabaseService
     };
     async addBankForProject(banco: Banco): Promise<Banco|null> 
     {
-    if (banco._id) 
+        //se trata de uma edicao quando a propriedade _id existe dentro do documento
+        if (banco._id)
         {
-            return await this.dbRepo.findOneAndUpdate({ _id : banco._id }, banco);
+            return await this.dbRepo.findOneAndReplace({ _id : banco.id }, banco);
         }   
-        const bankWithThisName = await this.dbRepo.findOne({id_projeto : banco.id_projeto.toString(),nm_banco : banco.nm_banco});
-        if (bankWithThisName) 
-        {
-            throw new UnauthorizedException("já existe um banco com este mesmo nome neste projeto!");
-        }
-        //é por que se trata de uma edicao de banco de dados
+        const bankWithThisName = await this.dbRepo.findOne(
+            {
+                id_projeto : banco.id_projeto,
+                nm_banco : banco.nm_banco
+            }
+        );
+        if (bankWithThisName) throw new UnauthorizedException("já existe um banco com este mesmo nome neste projeto!");
         return await this.dbRepo.create(banco);
     };
     async updateBank(id: string, banco: Banco): Promise<Banco | null> 

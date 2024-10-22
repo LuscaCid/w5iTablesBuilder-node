@@ -1,11 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 
-@Schema()
-export class Banco 
+@Schema({collection : "banco", timestamps : true})
+export class Banco extends Document
 {
-  @Prop()
-  _id? : string;
   @Prop({ type: String, required: true })
   id_projeto: string;
 
@@ -18,8 +16,8 @@ export class Banco
   @Prop()
   nm_usuario: string;
 
-  @Prop({type :  Number})
-  nu_porta: number;
+  @Prop()
+  nu_porta: string;
 
   @Prop()
   nm_servidor: string;

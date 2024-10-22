@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common"
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common"
 import { NodeService } from "./Node.service";
 import { Node } from "Schemas/Node";
 import { PositionUpdateArgs } from "Schemas/Position";
@@ -8,28 +8,28 @@ import { GetNodesDTO } from "./DTO/HttpArgs";
 export class NodeController  
 {
   public constructor (
-      private readonly nodeService : NodeService
+    private readonly nodeService : NodeService
   ) 
   {}
   /**
    * @summary Rota de patch par atualizacao simples dentro da tabela de acordo com o nome da tabela e classe modelo
    * @author Lucas Cid <lucasfelipaaa@gmail.com>
    * @created 15/10/2024
-   * 
    */
   @Patch("updateOne")
+  @HttpCode(200)
   async updateNameAndModelClass(@Body() args: Node) 
   {
     const response = await this.nodeService.updateNameAndClass(args);
     return {
+      response,
       message : "Atualizado com sucesso.",
-      statuscode  : 200,
     }
   }
   @Get("getMany")
+  @HttpCode(200)
   async getBankModuleNodes(@Query() args: GetNodesDTO)
   {   
-    console.log(args);
     const tabelas = await this.nodeService.getMany(args.id_banco, args.id_modulodiagrama);
     
     return {
@@ -38,6 +38,7 @@ export class NodeController
     }
   }
   @Post("addOne")
+  @HttpCode(201)
   async addTableNode(@Body() tabela : Node)
   {
     delete tabela._id;
@@ -52,9 +53,10 @@ export class NodeController
    * @author Lucas Cid 
    * @param arg 
    * @param res 
-   */
-  @Delete("deleteOne/:_id")
-  async deleteTableNode(@Param() _id :  string) 
+  */
+ @Delete("deleteOne/:_id")
+ @HttpCode(202)
+ async deleteTableNode(@Param() _id :  string) 
   {
     const nodeDeleted = await this.nodeService.deleteOne(_id);
     return {
@@ -221,7 +223,7 @@ export class NodeController
     ]
     tableWithNewPosition.forEach(
     async (table) => {
-        await this.nodeService.addOne(tabela);
+      await this.nodeService.addOne(tabela);
     }
     );
     return {

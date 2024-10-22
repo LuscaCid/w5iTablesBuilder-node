@@ -5,12 +5,9 @@ import { Position, PositionSchema } from "./Position";
 
 export type NodeDocument = HydratedDocument<Node> 
 
-@Schema({ timestamps : true })
-export class Node 
+@Schema({ timestamps : true, collection : "nodes" })
+export class Node extends Document
 {
-    @Prop({_id : true})
-    _id? : string;
-
     @Prop({type : String, required : true})
     type : string;
 

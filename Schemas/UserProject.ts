@@ -4,7 +4,7 @@ import { Document, HydratedDocument } from 'mongoose';
 
 export type UsuarioProjetosDocument = HydratedDocument<UsuarioProjetos>;
 
-@Schema()
+@Schema({timestamps : true, collection : "usuario_projeto"})
 export class UsuarioProjeto extends Document
 {
   @Prop()

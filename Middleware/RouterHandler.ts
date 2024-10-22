@@ -22,7 +22,6 @@ export class AuthMiddleware implements NestMiddleware
   async use(req: Request, res : Response, next: NextFunction) {
     const auth = admin.auth();
     let authorization = req.headers.authorization;
-
     if (!authorization) throw new AppError("Token nao passado!", 401);
       //valida token enviado pelos headers, se caso o usuario estiver autenticado, ele pode fazer a requisicao
     if (authorization.includes("Bearer"))

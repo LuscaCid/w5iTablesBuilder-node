@@ -12,8 +12,8 @@ import { DatabaseService } from "src/Database/Database.service";
     providers : [ ScriptService, DatabaseService ],
     imports : [ MongooseModule.forFeature(
         [
-            {name : Banco.name, schema : BancoSchema},
-            {name : ModuloDiagrama.name, schema : ModuloDiagramaSchema},
+            { name : Banco.name, schema : BancoSchema },
+            { name : ModuloDiagrama.name, schema : ModuloDiagramaSchema },
         ], 
         ServerConfig.getEnv("CONNECTION_NAME")
     ) ],

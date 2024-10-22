@@ -29,16 +29,13 @@ export class ScriptController
      * @author Lucas Cid <lucasfelipaaa@gmail.com>
      * @created 29/08/2024
      */
-    @Post("injectInMongo/:id_banco")
+    @Post("injectInMongoFromDatabase/:id_banco")
     async injectInMongoDatabaseCurrentTables(@Param() id_banco :  string)
     {
         //resgatando as informacoes referentes ao id do banco de dados passado para criacao das tabelas dentro do banco respectivo ao informado
         const databaseRequested = await this.dbService.getBankById(id_banco);
-        console.log(databaseRequested)
-        //obtencao das colunas apos
         const columns = await this.scriptService.getDatabaseCols(databaseRequested);
         //criando um array de objetos referentes ao formato de TableNode[] para inseri posteriormente no mongo db e recriar no frontend com base na virtualizacao feita
-        console.log(columns);
         // const tabelas = await this.scriptService.UnifyTablesWithYourColumns({
         //     columns, 
         //     id_banco
@@ -50,6 +47,18 @@ export class ScriptController
             message : "Script sql executado!"
         };
     };
+
+    @Post("injectSqlInDatabase/:id_banco")
+    async injectSqlInDatabase(@Body() sql : string, @Param() id_banco : string) 
+    {
+        const databaseRequested = await this.dbService.getBankById(id_banco);
+        if (!databaseRequested) 
+        {
+            throw new NotFoundException("Banco não encontrado.");
+        }
+        const response = await this.scriptService.runSqlScript(sql, databaseRequested);
+        return response;
+    }
     /**
      * @Summary Atualizacao de uma caracteristica da tabela como uma coluna alterada. 
      * @examples Colunas que têm coluna removida, adicionada mesmo apos a adicao no banco. mapeando as constraints para espelhar as alteracoes.

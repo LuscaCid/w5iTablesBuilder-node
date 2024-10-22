@@ -12,7 +12,6 @@ export class Notification extends Document
     
     @Prop({type : String})
     message : string;
-
 }
 //estrutura para uma notificacao,
 

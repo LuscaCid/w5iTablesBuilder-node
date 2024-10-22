@@ -51,9 +51,9 @@ export class ProjetoController
         }
         // a funcao tem como base adicionar o projeto com a funcao create, porem, retorna a primeira posicao
         const response = await this.projectService.addProjeto(projeto);
-        //apos adicionar o projeto, é necessario referenciar o criador do projeto na user_projeto
+        //apos adicionar o projeto, é necessario referenciar o criador do projeto na us er_projeto
         await this.projectService.addUserToProject({
-            id_projeto : response._id, 
+            id_projeto : response._id.toString(), 
             id_usuario : projeto.id_usuariocriador, 
             nu_cargo :"1" 
         });

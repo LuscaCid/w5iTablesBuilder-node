@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ServerConfig } from "Config/ServerConfig";
 import { Model } from "mongoose";
@@ -14,6 +14,7 @@ export class ModuloDiagramaService
     {} 
     async updateOne(modulo: ModuloDiagrama): Promise<ModuloDiagrama|null> 
     {
+        this.validateName(modulo.nm_modulodiagrama, modulo.id_banco);
         return await this.moduleDiagramRepo.findOneAndReplace({_id : modulo._id}, modulo);    
     }
     async addMany(modulos: ModuloDiagrama[]): Promise<void> 
@@ -22,6 +23,7 @@ export class ModuloDiagramaService
     }
     async addOne(modulo: ModuloDiagrama) : Promise<ModuloDiagrama> 
     {
+        this.validateName(modulo.nm_modulodiagrama, modulo.id_banco);
         return await this.moduleDiagramRepo.create(modulo);
     }
     async deleteOne(_id: string): Promise<void> 
@@ -32,8 +34,16 @@ export class ModuloDiagramaService
     {
         return await this.moduleDiagramRepo.find({id_banco}); 
     }   
-    async getByName(nm_modulodiagrama: string, id_banco : string): Promise<ModuloDiagrama | null> 
+
+    async validateName (moduleName : string, id_banco : string) 
     {
-        return await this.moduleDiagramRepo.findOne({nm_modulodiagrama,id_banco});
+        const alreadyCreated = await this.moduleDiagramRepo.findOne({
+            nm_modulodiagrama : moduleName,
+            id_banco 
+        });
+        if (alreadyCreated) 
+        {
+            throw new UnauthorizedException("Modulo já presente no banco.");
+        }
     }
 }
