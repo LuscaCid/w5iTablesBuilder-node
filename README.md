@@ -46,22 +46,6 @@ Você também precisará configurar variáveis de ambiente no arquivo `.env`. Aq
 
 #### Outras Configurações
 
-Configurações adicionais:
-
-
-- `DAYS`: Número de dias para retornar informações antigas.
-
-#### Configuração de CRON
-
-Para executar uma tarefa agendada todos os dias às 23 horas:
-
-Configure a string de conexão com o MongoDB:
-
-
-#### PostgreSQL
-
-Configure as informações de conexão com o PostgreSQL:
-
 ## configuracoes para rodar o projeto numa maquina linux
 
 [Unit]
@@ -74,8 +58,8 @@ WorkingDirectory=<caminho/para/pasta/do/projeto>
 Restart=always
 User=root
 Group=root
-WorkingDirectory=/home/app/portal-api
-Environment=DATABASE_URL=mongodb://localhost:porta/w5i-tablesbuilder
+WorkingDirectory=<caminho/para/projeto>
+Environment=DATABASE_URL=mongodb://<host>:<porta>/w5i-tablesbuilder
 
 [Install]
 WantedBy=multi-user.target
