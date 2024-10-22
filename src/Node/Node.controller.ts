@@ -40,7 +40,7 @@ export class NodeController
   @Post("addOne")
   async addTableNode(@Body() tabela : Node)
   {
-    delete tabela.id;
+    delete tabela._id;
     const nodeId = await this.nodeService.addOne(tabela);
     return {
       _id : nodeId,

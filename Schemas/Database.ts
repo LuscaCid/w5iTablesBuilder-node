@@ -18,8 +18,8 @@ export class Banco
   @Prop()
   nm_usuario: string;
 
-  @Prop()
-  nm_porta: string;
+  @Prop({type :  Number})
+  nu_porta: number;
 
   @Prop()
   nm_servidor: string;

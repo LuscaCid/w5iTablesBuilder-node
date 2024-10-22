@@ -8,6 +8,7 @@ import { ColumnNodeModule } from './ColumnNode/ColumnNode.module';
 import { DatabaseModule } from './Database/Database.module';
 import { ProjectModule } from './Projects/Project.module';
 import { NotificationModule } from './Notification/Notification.module';
+import { ScriptsModule } from './Scripts/Scripts.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { NotificationModule } from './Notification/Notification.module';
     ColumnNodeModule,
     DatabaseModule,
     ProjectModule,
-    NotificationModule
+    NotificationModule,
+    ScriptsModule
   ],
 })
 export class AppModule

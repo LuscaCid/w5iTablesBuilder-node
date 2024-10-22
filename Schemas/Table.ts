@@ -5,7 +5,8 @@ import { Coluna, ColunaSchema } from './Coluna';
 export type TableDocument = HydratedDocument<Table>;
 
 @Schema()
-export class Table extends Document{
+export class Table
+{
   @Prop()
   nm_classmodelo: string;
 

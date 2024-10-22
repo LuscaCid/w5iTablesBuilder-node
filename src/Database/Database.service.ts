@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ServerConfig } from "Config/ServerConfig";
 import mongoose, { Model } from "mongoose";
@@ -37,6 +37,16 @@ export class DatabaseService
     };
     async addBankForProject(banco: Banco): Promise<Banco|null> 
     {
+    if (banco._id) 
+        {
+            return await this.dbRepo.findOneAndUpdate({ _id : banco._id }, banco);
+        }   
+        const bankWithThisName = await this.dbRepo.findOne({id_projeto : banco.id_projeto.toString(),nm_banco : banco.nm_banco});
+        if (bankWithThisName) 
+        {
+            throw new UnauthorizedException("já existe um banco com este mesmo nome neste projeto!");
+        }
+        //é por que se trata de uma edicao de banco de dados
         return await this.dbRepo.create(banco);
     };
     async updateBank(id: string, banco: Banco): Promise<Banco | null> 

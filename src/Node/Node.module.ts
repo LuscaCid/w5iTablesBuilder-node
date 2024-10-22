@@ -10,8 +10,8 @@ import { ServerConfig } from "Config/ServerConfig";
       { name : Node.name, schema : NodeSchema }
     ], ServerConfig.getEnv("CONNECTION_NAME"))
   ],
-  providers : [NodeService],
-  controllers : [NodeController]
+  providers : [ NodeService ],
+  controllers : [ NodeController ]
 })
 export class NodeModule 
 {}

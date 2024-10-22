@@ -10,6 +10,7 @@ import { Projeto, ProjetoSchema } from "Schemas/Project";
 import { ModuloDiagrama, ModuloDiagramaSchema } from "Schemas/ModuloDiagrama";
 import { UsuarioProjeto, UsuarioProjetoSchema } from "Schemas/UserProject";
 import { Notification, NotificationSchema } from "Schemas/Notification";
+import { DatabaseConnection } from "./DatabaseConnection.service";
 
 /**
  * @summary Este modulo nao eh de configuracao do banco de dados o qual a aplicacao realizara conexao para obtencao ou insercao de informacoes. Se trata dos bancos que serao inseridos na aplicacao dentro dos projetos os quais serao inseridos os sqls para gerenciamento do banco de dados
@@ -17,21 +18,24 @@ import { Notification, NotificationSchema } from "Schemas/Notification";
  */
 @Module({
     imports : [
-        
-        MongooseModule.forFeature([
-            { name : Banco.name, schema : BancoSchema },
-            { name : Projeto.name, schema : ProjetoSchema },
-            { name : ModuloDiagrama.name, schema : ModuloDiagramaSchema },
-            { name : UsuarioProjeto.name, schema : UsuarioProjetoSchema },
-            { name : Notification.name, schema : NotificationSchema },
-        ], ServerConfig.getEnv("CONNECTION_NAME")) 
+        MongooseModule.forFeature(
+            [
+                { name : Banco.name, schema : BancoSchema },
+                { name : Projeto.name, schema : ProjetoSchema },
+                { name : ModuloDiagrama.name, schema : ModuloDiagramaSchema },
+                { name : UsuarioProjeto.name, schema : UsuarioProjetoSchema },
+                { name : Notification.name, schema : NotificationSchema },
+            ], ServerConfig.getEnv("CONNECTION_NAME")
+        ) 
     ],
-    controllers : [DatabaseController],
+    controllers : [ DatabaseController ],
     providers : [
+        DatabaseConnection,
         DatabaseService, 
         ProjetoService,
         ModuloDiagramaService
-    ]
+    ],
+    exports : [ DatabaseConnection ]
 })
 export class DatabaseModule 
 {}

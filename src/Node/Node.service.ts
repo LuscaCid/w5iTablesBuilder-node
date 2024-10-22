@@ -27,7 +27,7 @@ export class NodeService
     async updateNameAndClass (table : Node) 
     {
         return await this.nodeRepo.findOneAndUpdate(
-            { _id : table.id }, 
+            { _id : table._id }, 
             table,
         ) 
     }
@@ -47,7 +47,7 @@ export class NodeService
     } 
     async updateTabela (node : Node) 
     {
-        await this.nodeRepo.updateOne({_id : node.id}, node);
+        await this.nodeRepo.updateOne({_id : node._id}, node);
     }
     async addMany(tabelas : Node[])
     {
@@ -82,7 +82,7 @@ export class NodeService
         const tablesDeleted = await Promise.all(
                 nodes.map(
                     async (node) => {
-                        return await this.nodeRepo.findOneAndDelete({id : node.id}) as Node;
+                        return await this.nodeRepo.findOneAndDelete({id : node._id}) as Node;
                 }
             )
         )
