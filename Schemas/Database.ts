@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { StringFormat } from 'firebase/storage';
 import { Document } from 'mongoose';
 
 @Schema({collection : "banco", timestamps : true})
@@ -24,6 +25,9 @@ export class Banco extends Document
 
   @Prop()
   nm_usuariocriador: string;
+
+  @Prop({type : String, required:  false})
+  ds_cert? : string;
 }
 
 export const BancoSchema = SchemaFactory.createForClass(Banco);

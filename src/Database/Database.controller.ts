@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UnauthorizedException } from "@nestjs/common";
 import { DatabaseService } from "./Database.service";
 import { ProjetoService } from "src/Projects/Project.service";
 import { ModuloDiagramaService } from "src/ModuloDiagrama/moduloDiagrama.service";
@@ -21,14 +21,12 @@ export class DatabaseController
    * @returns 
    */
   @Get("get-project-banks/:id_projeto/:id_usuario")
-  async getBancoByIdProjeto( 
-    @Param() params : {id_projeto : string; id_usuario : string}, 
-  )
+  async getBancoByIdProjeto( @Param("id_projeto")  id_projeto : string, @Param("id_usuario") id_usuario : string)
   {
-    const bancos = await this.dbService.getBanksByProjectId(params.id_projeto);
+    const bancos = await this.dbService.getBanksByProjectId(id_projeto);
     //se caso tentar buscar um banco o qual nao faz parte
     const userIsPartnerOfThisDatabase = await this.projectService.getUserProjects(
-      {id_usuario : params.id_usuario}
+      {id_usuario : id_usuario}
     );
     return {
       bancosRole : userIsPartnerOfThisDatabase,
@@ -41,9 +39,7 @@ export class DatabaseController
    * @implements Servico de modulo diagrama para poder criar o modulo principal na execucao deste script
    */
   @Post("addOne")
-  async addBanco (
-    @Body() banco : Banco
-  ) 
+  async addBanco (@Body() banco : Banco) 
   {
     const projectExists = await this.projectService.getProjectById(banco.id_projeto);
     if (!projectExists) 
@@ -65,15 +61,19 @@ export class DatabaseController
     }
   }
   @Put("updateBanco")
-  async updateBanco (
-    @Body() banco : Banco
-  )
+  async updateBanco (@Body() banco : Banco)
   {
     const response = await this.dbService.updateBank(banco._id as string, banco);
-  
     return {
-        updatedDatabase : response,
-        statusCode : 200
+      updatedDatabase : response,
     };
+  }
+  @Delete("deleteOne/:_id")
+  async deleteBanco (@Param("_id") _id : string) 
+  {
+    const responseDeleted = await this.dbService.deleteBank(_id);
+    return {
+      deletedDatabase : responseDeleted
+    }
   }
 }

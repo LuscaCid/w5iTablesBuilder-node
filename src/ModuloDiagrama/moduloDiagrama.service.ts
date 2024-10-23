@@ -20,7 +20,13 @@ export class ModuloDiagramaService
     async updateOne(modulo: ModuloDiagrama): Promise<ModuloDiagrama|null> 
     {
         this.validateName(modulo.nm_modulodiagrama, modulo.id_banco);
-        return await this.moduleDiagramRepo.findOneAndReplace({_id : modulo._id}, modulo);    
+        return await this.moduleDiagramRepo.findOneAndUpdate(
+            {_id : modulo._id}, 
+            {
+                nm_modulodiagrama : modulo.nm_modulodiagrama,
+                id_banco : modulo.id_banco
+            }
+        );    
     }
     async addMany(modulos: ModuloDiagrama[]): Promise<void> 
     {
@@ -91,7 +97,6 @@ export class ModuloDiagramaService
             )
         }
         await this.moduleDiagramRepo.findByIdAndDelete({_id});
-        
     }
     async getMany(id_banco: string): Promise<ModuloDiagrama[]> 
     {

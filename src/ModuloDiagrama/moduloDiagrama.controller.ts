@@ -23,7 +23,7 @@ export class ModuloDiagramaController
     {
         const updated = await this.moduloDiagramService.updateOne(newModulo);
         return {
-            modulo : updated,
+            moduloDiagrama : updated,
             statusCode : 200
         }
     }
