@@ -9,8 +9,8 @@ import { Node } from "Schemas/Node";
 export class ColumnNodeService  
 {
     public constructor(
-        @InjectModel(Coluna.name, ServerConfig.getMongoDbName())
-        private readonly columnRepo : Model<Coluna>
+        @InjectModel(Node.name, ServerConfig.getMongoDbName())
+        private readonly nodeRepo : Model<Node>
     )
     {}
     /**
@@ -21,9 +21,7 @@ export class ColumnNodeService
      */
     async addColumn(_id : string,  column: Coluna): Promise<Node|null> 
     {
-        console.log(_id);
-        console.log(column);
-        return await this.columnRepo.findOneAndUpdate(
+        return await this.nodeRepo.findOneAndUpdate(
             { _id }, 
             { $push : { 'data.colunas' : column}}, 
             { new : true }
@@ -32,7 +30,7 @@ export class ColumnNodeService
     async deleteColumn(_id: string, id_colunacanvas: string): Promise<Node | null> 
     {
         //busca a tabela pelo _id e em seguida deleta a coluna pelo proprio id
-        return await this.columnRepo.findOneAndUpdate(
+        return await this.nodeRepo.findOneAndUpdate(
             { _id }, 
             {
                 $pull : {
@@ -43,7 +41,7 @@ export class ColumnNodeService
         );
     }
     async updateColumn(_id: string, column: Coluna): Promise<Node | null> {
-        return await this.columnRepo.findOneAndUpdate(
+        return await this.nodeRepo.findOneAndUpdate(
             { _id, 'data.colunas._id' : column._id },
             { $set : {
                 'data.colunas.$.nm_colunacanvas' : column.nm_colunacanvas,
@@ -64,7 +62,7 @@ export class ColumnNodeService
   
     async getColumnByNameInNode(_id: string, nm_colunacanvas: string): Promise<Coluna | null> 
     {
-        return await this.columnRepo.findOne({ _id, 'data.colunas.nm_colunacanvas' : nm_colunacanvas });
+        return await this.nodeRepo.findOne({ _id, 'data.colunas.nm_colunacanvas' : nm_colunacanvas });
     }
 
 }

@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { Node } from "Schemas/Node";
 import { Model } from "mongoose";
 import { PositionUpdateArgs } from "Schemas/Position";
+import { Table } from "Schemas/Table";
 @Injectable()
 export class NodeService
 {
@@ -27,8 +28,20 @@ export class NodeService
     async updateNameAndClass (table : Node) 
     {
         return await this.nodeRepo.findOneAndUpdate(
-            { _id : table._id }, 
-            table,
+            { _id : table.id }, 
+            {
+                data : {
+                    nm_tabelacanvas : table.data.nm_tabelacanvas,
+                    nm_classmodelo : table.data.nm_classmodelo,
+                    id_modulodiagrama : table.data.id_modulodiagrama,
+                    deletable : false,
+                    colunas : table.data.colunas,
+                    dt_atualizacao : new Date(),
+                    dt_criacao : table.data.dt_atualizacao,
+                    id_banco : table.data.id_banco,
+                    nm_usuariocriador : table.data.nm_usuariocriador,
+                }  as Table
+            },
         ) 
     }
     async updateOne(_id: string, node: Node): Promise<Node | null> 

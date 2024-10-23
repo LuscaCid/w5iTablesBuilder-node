@@ -30,6 +30,7 @@ export class ColumnNodeController
     @Post("create")
     async addColumn(@Body() dtoCols : DtoColumnArgs) 
     {
+        console.log(dtoCols);
         const nodeUpdatedWithNewColumn = await this.columnNodeService.addColumn(dtoCols._id, dtoCols.coluna);
         return {
             message : "Coluna adicionada com sucesso a tabela!",

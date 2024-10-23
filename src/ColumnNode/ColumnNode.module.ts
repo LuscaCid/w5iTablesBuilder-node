@@ -4,11 +4,12 @@ import { ServerConfig } from "Config/ServerConfig";
 import { Coluna, ColunaSchema } from "Schemas/Coluna";
 import { ColumnNodeController } from "./ColumnNode.controller";
 import { ColumnNodeService } from "./ColumnNode.service";
+import { Node, NodeSchema } from "Schemas/Node";
 
 @Module({
     imports : [
         MongooseModule.forFeature([
-            { name : Coluna.name, schema : ColunaSchema }
+            { name : Node.name, schema : NodeSchema }
           ], ServerConfig.getEnv("CONNECTION_NAME"))
     ],
     controllers : [ColumnNodeController],

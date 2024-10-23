@@ -9,6 +9,9 @@ export class Coluna extends Document
   @Prop({ required: true })
   nm_tabelacanvas: string;
 
+  @Prop({ type : String })
+  ds_valordefault : string;
+
   @Prop({ required: true })
   tp_colunacanvas: string;
 
