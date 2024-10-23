@@ -39,15 +39,7 @@ export class Coluna extends Document
   @Prop()
   nu_tamanho: string;
 
-  @Prop({
-    type: Object,
-    default: {
-      id_node: null,
-      id_tabelasource: null,
-      id_tabelatarget: null,
-      availableForEdge: true,
-    },
-  })
+  @Prop({type: Object, required : false})
   referencia: {
     id_node: string;
     id_tabelasource: string;

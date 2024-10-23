@@ -9,7 +9,6 @@ import { DatabaseModule } from './Database/Database.module';
 import { ProjectModule } from './Projects/Project.module';
 import { NotificationModule } from './Notification/Notification.module';
 import { ScriptsModule } from './Scripts/Scripts.module';
-import { ModuloDiagramaService } from './ModuloDiagrama/moduloDiagrama.service';
 import { ModuloDiagramaModule } from './ModuloDiagrama/moduloDiagrama.module';
 
 @Module({

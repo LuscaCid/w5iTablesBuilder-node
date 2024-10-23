@@ -36,10 +36,10 @@ export class ModuloDiagramaController
             status : 200,
         };
     }
-    @Delete("deleteOne") 
-    async deleteModulodiagram(@Param() id_modulodiagram : string) 
+    @Delete("deleteOne/:_id/:id_banco") 
+    async deleteModulodiagrama(@Param("_id") _id : string, @Param("id_banco") id_banco : string) 
     {
-        const moduleDeleted = await this.moduloDiagramService.deleteOne(id_modulodiagram);
+        const moduleDeleted = await this.moduloDiagramService.deleteOne(_id, id_banco);
         return {
             deletedModule : moduleDeleted, 
             status : 200

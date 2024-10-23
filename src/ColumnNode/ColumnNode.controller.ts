@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Param, Post, Put } from "@nestjs/common";
 import { Coluna } from "Schemas/Coluna";
 import { ColumnNodeService } from "./ColumnNode.service";
 
@@ -18,13 +18,24 @@ export class ColumnNodeController
      * @param res 
      */
     @Post("save")
+    @HttpCode(201)
     async saveColumn(@Body() dtoCols : DtoColumnArgs) 
     {
-        const response = await this.columnNodeService.addColumn(dtoCols._id, dtoCols.coluna);
+        const { _id, coluna } = dtoCols;
+        if (dtoCols.coluna._id) 
+        {
+            const response = await this.columnNodeService.updateColumn(_id, coluna)
+            return {
+                node : response,
+                statusCode : 200,
+                message : "Coluna atualizada"
+            };
+        }
+        const response = await this.columnNodeService.addColumn(_id, coluna);
         return {
             node : response,
-            statusCode : 200,
-            message : "Coluna atualizada/criada"
+            statusCode : 201,
+            message : "Coluna criada"
         };
     }
     @Post("create")
@@ -52,8 +63,9 @@ export class ColumnNodeController
      * @summary A funcao recebe como parametros para a atualiazacao do documento o id da tabela e o id da tabela.
      */
     @Delete("delete/:_id/:columnId")
-    async deleteColumn(@Param() _id : string, @Param()columnId : string) 
+    async deleteColumn(@Param("_id") _id : string, @Param("columnId") columnId : string) 
     {
+        console.log(_id, columnId);
         const deletedColumn = await this.columnNodeService.deleteColumn(_id,columnId);
         return {
             deletedColumn,

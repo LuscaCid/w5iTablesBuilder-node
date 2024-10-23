@@ -56,7 +56,7 @@ export class NodeController
   */
  @Delete("deleteOne/:_id")
  @HttpCode(202)
- async deleteTableNode(@Param() _id :  string) 
+ async deleteTableNode(@Param("_id") _id :  string) 
   {
     const nodeDeleted = await this.nodeService.deleteOne(_id);
     return {
