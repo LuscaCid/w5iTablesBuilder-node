@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { Referencia } from "@Types/Refference";
 import { ServerConfig } from "Config/ServerConfig";
 import { Model } from "mongoose";
 import { ModuloDiagrama } from "Schemas/ModuloDiagrama";
@@ -33,27 +34,63 @@ export class ModuloDiagramaService
     async deleteOne(_id: string, id_banco : string): Promise<void> 
     {
         //apos deletar o modulo diagrma, vai ser necessario buscar o principal do banco de dados, buscar as tabelas com o id do modulo apagado e alterar para o modulo cujo nome é principal e obter o id dele e alterar em cada documento
-        const tablesInsideThisDiagram = await this.nodeRepo.find({
-            'data.id_modulodiagrama' : _id
-        });
-        if (tablesInsideThisDiagram.length> 0) 
+        const nodesInsideTheDeletedDiagram = await this.nodeRepo.find({ 'data.id_modulodiagrama' : _id });
+        
+        if (nodesInsideTheDeletedDiagram.length> 0) 
         {
+            //obtencao do modulo principal (o que é criado automaticamente ao criar um banco de dados novo)
             const mainModule = await this.moduleDiagramRepo.findOne({
                 id_banco,
                 nm_modulodiagrama : "Principal"
             })
+            //verificar se as tabelas no modulo principal possuem referencia no modulo deletado para alterar o availableforedge para true, haja vista que agora elas estao dentro do msm diagrama
+           
             await Promise.all(
-                tablesInsideThisDiagram.map(async (table) => {
+                nodesInsideTheDeletedDiagram.map(async (table) => {
                     return await this.nodeRepo.findOneAndUpdate(
                         { _id : table._id },
-                        { $set : {
+                        { 
+                            $set : {
                             'data.id_modulodiagrama' : mainModule._id
                         } }
                     )
                 })
             );
+            //apos atualizar todas as tabelas para o main module, basta apenas realizar a linkagem
+            const nodesInsideMainModule = await this.nodeRepo.find({
+                'data.id_modulodiagrama' : mainModule._id,
+                'data.id_banco' : id_banco
+            });
+            console.log(nodesInsideMainModule);
+            await Promise.all(
+                nodesInsideMainModule.map((node) => {
+                    node.data.colunas.forEach(col => {
+                        nodesInsideMainModule.forEach(async (lowNode) => {
+                            if (
+                                node._id != lowNode._id &&
+                                col.referencia && 
+                                col.referencia.id_node == lowNode._id && 
+                                !col.referencia.availableForEdge
+                            ) 
+                            {
+                                await this.nodeRepo.findOneAndUpdate(
+                                    { 'data.colunas._id' : col._id },
+                                    { $set : { 
+                                        'data.colunas.$.referencia' : {
+                                            availableForEdge : true,
+                                            id_node : col.referencia.id_node,
+                                            id_tabelasource : col.referencia.id_tabelasource,
+                                            id_tabelatarget : col.referencia.id_tabelatarget
+                                        } as Referencia
+                                    }}
+                                )
+                            }
+                        })
+                    })
+                })
+            )
         }
-         await this.moduleDiagramRepo.findByIdAndDelete({_id});
+        await this.moduleDiagramRepo.findByIdAndDelete({_id});
         
     }
     async getMany(id_banco: string): Promise<ModuloDiagrama[]> 
