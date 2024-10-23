@@ -114,4 +114,11 @@ export class ModuloDiagramaService
             throw new UnauthorizedException("Modulo já presente no banco.");
         }
     }
+
+    async deleteModulesByDatabaseId (id_banco : string) 
+    {
+        await this.nodeRepo.deleteMany({
+            'data.id_banco' : id_banco
+        })
+    }
 }

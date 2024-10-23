@@ -102,5 +102,12 @@ export class NodeService
         return tablesDeleted;
     }
 
+    async deleteNodesByDatabaseId (id_banco : string) 
+    {
+        await this.nodeRepo.deleteMany({
+            'data.id_banco' : id_banco
+        })
+    } 
+
     
 }

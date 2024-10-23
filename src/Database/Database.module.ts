@@ -12,6 +12,7 @@ import { UsuarioProjeto, UsuarioProjetoSchema } from "Schemas/UserProject";
 import { Notification, NotificationSchema } from "Schemas/Notification";
 import { DatabaseConnection } from "./DatabaseConnection.service";
 import { Node, NodeSchema } from "Schemas/Node";
+import { NodeService } from "src/Node/Node.service";
 
 /**
  * @summary Este modulo nao eh de configuracao do banco de dados o qual a aplicacao realizara conexao para obtencao ou insercao de informacoes. Se trata dos bancos que serao inseridos na aplicacao dentro dos projetos os quais serao inseridos os sqls para gerenciamento do banco de dados
@@ -32,6 +33,7 @@ import { Node, NodeSchema } from "Schemas/Node";
     ],
     controllers : [ DatabaseController ],
     providers : [
+        NodeService,
         DatabaseConnection,
         DatabaseService, 
         ProjetoService,

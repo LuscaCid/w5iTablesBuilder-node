@@ -4,11 +4,13 @@ import { ProjetoService } from "src/Projects/Project.service";
 import { ModuloDiagramaService } from "src/ModuloDiagrama/moduloDiagrama.service";
 import { Banco } from "Schemas/Database";
 import { ModuloDiagrama } from "Schemas/ModuloDiagrama";
+import { NodeService } from "src/Node/Node.service";
 
 @Controller("banco")
 export class DatabaseController 
 {
   public constructor(
+    private readonly nodeService : NodeService,
     private readonly dbService : DatabaseService,
     private readonly projectService : ProjetoService,
     private readonly moduloDiagramaService : ModuloDiagramaService
@@ -55,14 +57,12 @@ export class DatabaseController
         id_banco : response._id.toString(),
       } as ModuloDiagrama);
     }
-    return {
-      data : response,
-      statusCode : 201
-    }
+    return response
   }
-  @Put("updateBanco")
+  @Put("updateOne")
   async updateBanco (@Body() banco : Banco)
   {
+    //virá com o _id setado
     const response = await this.dbService.updateBank(banco._id as string, banco);
     return {
       updatedDatabase : response,
@@ -71,6 +71,9 @@ export class DatabaseController
   @Delete("deleteOne/:_id")
   async deleteBanco (@Param("_id") _id : string) 
   {
+    //é necessario excluir tambem os modulos diagrama atrelados ao banco e tabelas tambem
+    await this.nodeService.deleteNodesByDatabaseId(_id)
+    await this.moduloDiagramaService.deleteModulesByDatabaseId(_id);
     const responseDeleted = await this.dbService.deleteBank(_id);
     return {
       deletedDatabase : responseDeleted
