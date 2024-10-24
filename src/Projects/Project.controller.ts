@@ -9,7 +9,7 @@ import {  /* ApiConsumes, */ ApiCreatedResponse, ApiParam } from "@nestjs/swagge
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AppError } from "src/utils/AppError";
 */
-import { UserInviteProjetos } from "@Types/UserInvites";
+import { GenericInvite, UserInviteProjetos } from "@Types/UserInvites";
 
 @Controller("projeto")
 export class ProjetoController 
@@ -67,20 +67,6 @@ export class ProjetoController
         name : "id_invite", 
         description : "Parametro para encontrar o convite que estiver de acordo com o id enviado como parametro"
     })
-    @HttpCode(200)
-    @Post("/accept-invite/:id_invite")
-    async acceptProjetoInvite (@Param() id_invite :  string)
-    {
-        //aceitando o convite para participacao do projeto e depois criando o documento na colecao de usuario_projeto
-        const response = await this.projectService.acceptInvite(id_invite)
-        response.id
-        const responseFromUserProjects = await this.projectService.addUserToProject({
-            id_projeto : response.id_projeto, 
-            id_usuario : response.id_usuarioconvidado, 
-            nu_cargo : response.nu_cargo  
-        });
-        return response;
-    }  
     @Delete("delete/:id_projeto")
     async deleteProjeto (@Param() id_projeto : string) 
     {
@@ -114,10 +100,11 @@ export class ProjetoController
      * @author Lucas Cid <lucasfelipaaa@gmail.com>
      * @created 21/10/2024
      */
-    @Post("invite-users") 
     @ApiCreatedResponse({description : "Usuarios convidados com sucesso"})
-    async inviteUsersToProject(@Body() users : UserInviteProjetos[]) 
+    @Post("invite-users") 
+    async inviteUsersToProject(@Body() users : GenericInvite<UserInviteProjetos>[]) 
     {
+        console.log(users);
         const invitationsResponse = await this.projectService.inviteFriends(users);
         return {
             invitationsResponse,
@@ -157,22 +144,6 @@ export class ProjetoController
             response, 
             statusCode : 200,
         }
-    }
-    /**
-     * @summary Metodo mais generalista que vai ser responsavel por retornar, de form mais generica, as notificacoes deste usuario com um uma estrutura padrao de notificacao e sempre uma schema propria da notificacao para que o processo fique dinamico.
-     * @author Lucas Cid <lucasfelipaaa@gmail.com>
-     * @created 18/10/2024
-     */
-    @Get("user-notifications/:uid")
-    async getUserNotifications (@Param() uid : string ) 
-    {
-        //retornar as notificacoes cujo id_usuarioconvidado for igual ao uid passado como parametro 
-        const response = await this.projectService.getUserInvites(uid) ;
-        return {
-            notifications : response,
-            statusCode : 200,
-            message : "Notificações do usuario."
-        };
     }
 }
  

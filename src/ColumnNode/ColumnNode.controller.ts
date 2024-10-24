@@ -79,7 +79,6 @@ export class ColumnNodeController
     async replaceManyColumns(@Body() columns : ColumnsForUpdate[])
     {
         const response = await this.columnNodeService.updateMany(columns);
-
         return response
     }
 }
