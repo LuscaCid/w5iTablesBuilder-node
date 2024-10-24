@@ -16,3 +16,5 @@ export interface Coluna
     createdAt? : string
     updatedAt? : string
 }
+
+export type ColumnsForUpdate = Coluna & {node_id : string};

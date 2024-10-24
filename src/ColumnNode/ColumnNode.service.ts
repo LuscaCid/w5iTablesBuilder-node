@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { ColumnsForUpdate } from "@Types/Column";
 import { ServerConfig } from "Config/ServerConfig";
 import { Model } from "mongoose";
 import { Coluna } from "Schemas/Coluna";
@@ -13,6 +14,13 @@ export class ColumnNodeService
         private readonly nodeRepo : Model<Node>
     )
     {}
+    async updateMany (columns : ColumnsForUpdate[])
+    {
+        const responses = await Promise.all(
+            columns.map(async(col) => await this.updateColumn(col.node_id, col))
+        );
+        return responses;
+    }
     /**
      * @summary A funcao vai salvar a coluna no banco de dados mongodb, a ideia eh se caso ela ja nao existir, apenas criar um novo documento
      * @param _id 
@@ -40,7 +48,7 @@ export class ColumnNodeService
             { new : true }
         );
     }
-    async updateColumn(_id: string, column: Coluna): Promise<Node | null> {
+    async updateColumn(_id: string, column: Coluna | ColumnsForUpdate): Promise<Node | null> {
         return await this.nodeRepo.findOneAndUpdate(
             { _id, 'data.colunas._id' : column._id },
             { $set : {

@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, HttpCode, Param, Post, Put } from "@nestjs/common";
 import { Coluna } from "Schemas/Coluna";
 import { ColumnNodeService } from "./ColumnNode.service";
+import { ColumnsForUpdate } from "@Types/Column";
 
 interface DtoColumnArgs {
     _id : string; //id do node para o qual a coluna sera direcionada
@@ -63,15 +64,22 @@ export class ColumnNodeController
      * @summary A funcao recebe como parametros para a atualiazacao do documento o id da tabela e o id da tabela.
      */
     @Delete("delete/:_id/:columnId")
+    @HttpCode(200)
     async deleteColumn(@Param("_id") _id : string, @Param("columnId") columnId : string) 
     {
-        console.log(_id, columnId);
         const deletedColumn = await this.columnNodeService.deleteColumn(_id,columnId);
         return {
             deletedColumn,
-            statusCode : 200,
             message : "Column has been deleted successfully"
         };
     }
 
+    @Put("replaceManyCols")
+    @HttpCode(200)
+    async replaceManyColumns(@Body() columns : ColumnsForUpdate[])
+    {
+        const response = await this.columnNodeService.updateMany(columns);
+
+        return response
+    }
 }
